@@ -1,17 +1,18 @@
-import { useState } from 'react'
-//import './App.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import MovieDetail from './pages/MovieDetail'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import MoviesList from './pages/MoviesList';
+import MovieDetail from './pages/MovieDetail';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <MovieDetail />
-    </>
-  )
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<MoviesList />} />
+        <Route path="/movie/:id" element={<MovieDetail />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
