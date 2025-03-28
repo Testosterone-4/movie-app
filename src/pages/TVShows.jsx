@@ -2,18 +2,16 @@ import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
-import { setMovies } from '../store/moviesSlice';
 import { toggleWishlist, selectWishlistItems } from '../store/wishlistSlice';
-import { useMovieSearch } from '../store/useMovieSearch';
-
-function MoviesList() {
+import { useTVSearch } from '../store/useTVSearch'; 
+function TVShows() {
+  const [tvShows, setTvShows] = useState([]);
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
   const dispatch = useDispatch();
-  const movies = useSelector((state) => state.movies.list);
   const wishlistItems = useSelector(selectWishlistItems);
-  const { searchResults, searchLoading, handleSearch } = useMovieSearch();
+  const { searchResults: tvSearchResults, searchLoading: tvSearchLoading, handleSearch: handleTVSearch } = useTVSearch();
 
   // Debounce function for search
   const debounce = (func, delay) => {
@@ -24,33 +22,33 @@ function MoviesList() {
     };
   };
 
-  // Fetch movies if not searching
+  // Fetch TV shows if not searching
   useEffect(() => {
     if (!isSearchActive) {
-      api.get(`/movie/now_playing?page=${page}`).then((response) => {
-        dispatch(setMovies(response.data.results));
+      api.get(`/tv/on_the_air?page=${page}`).then((response) => {
+        setTvShows(response.data.results);
       });
     }
-  }, [page, isSearchActive, dispatch]);
+  }, [page, isSearchActive]);
 
-  // Update movies when search results change
+  // Update TV shows when search results change
   useEffect(() => {
-    if (isSearchActive && searchResults) {
-      dispatch(setMovies(searchResults));
+    if (isSearchActive && tvSearchResults) {
+      setTvShows(tvSearchResults);
     }
-  }, [searchResults, isSearchActive, dispatch]);
+  }, [tvSearchResults, isSearchActive]);
 
   // Debounced search handler
   const handleDynamicSearch = useCallback(
     debounce((query) => {
       if (query.trim()) {
         setIsSearchActive(true);
-        handleSearch(query, page);
+        handleTVSearch(query, page);
       } else {
         setIsSearchActive(false);
       }
     }, 300),
-    [page, handleSearch]
+    [page, handleTVSearch]
   );
 
   // Handle search input changes
@@ -67,21 +65,21 @@ function MoviesList() {
   };
 
   // Toggle wishlist
-  const handleToggleWishlist = (movie) => {
-    dispatch(toggleWishlist(movie));
+  const handleToggleWishlist = (show) => {
+    dispatch(toggleWishlist(show));
   };
 
-  // Check if a movie is in the wishlist
-  const isInWishlist = (movieId) => {
-    return wishlistItems.some((item) => item.id === movieId);
+  // Check if a TV show is in the wishlist
+  const isInWishlist = (showId) => {
+    return wishlistItems.some((item) => item.id === showId);
   };
 
-  if (searchLoading) {
+  if (tvSearchLoading) {
     return <div className="text-center py-5">Searching...</div>;
   }
 
   return (
-    <div className="movies-list mt-5 pt-5">
+    <div className="tv-shows mt-5 pt-5">
       <div className="container">
         {/* Search Bar */}
         <div className="mb-4">
@@ -89,7 +87,7 @@ function MoviesList() {
             <input
               type="text"
               className="form-control search-input"
-              placeholder="Search movies..."
+              placeholder="Search TV shows..."
               value={searchQuery}
               onChange={handleSearchChange}
             />
@@ -110,37 +108,37 @@ function MoviesList() {
           )}
         </div>
 
-        {/* Movies Section */}
+        {/* TV Shows Section */}
         <h2 className="section-title">
-          {isSearchActive ? 'Search Results' : 'Now Playing Movies'}
+          {isSearchActive ? 'Search Results' : 'On The Air TV Shows'}
         </h2>
         <div className="row">
-          {movies && movies.length > 0 ? (
-            movies.map((movie) => {
-              const rating = movie.vote_average ? Math.round(movie.vote_average * 10) : 'N/A';
+          {tvShows && tvShows.length > 0 ? (
+            tvShows.map((show) => {
+              const rating = show.vote_average ? Math.round(show.vote_average * 10) : 'N/A';
               return (
-                <div key={movie.id} className="col-lg-2 col-md-4 col-sm-6 mb-4">
+                <div key={show.id} className="col-lg-2 col-md-4 col-sm-6 mb-4">
                   <div className="movie-card">
-                    <Link to={`/movie/${movie.id}`}>
+                    <Link to={`/tv/${show.id}`}>
                       <div className="poster-wrapper">
                         <img
                           src={
-                            movie.poster_path
-                              ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+                            show.poster_path
+                              ? `https://image.tmdb.org/t/p/w500/${show.poster_path}`
                               : 'https://via.placeholder.com/200x300?text=No+Image'
                           }
                           className="card-img-top"
-                          alt={movie.title || 'Movie'}
+                          alt={show.name || 'TV Show'}
                         />
                         <span className="rating-badge">{rating}</span>
                       </div>
                     </Link>
                     <div className="card-body p-0 mt-2">
-                      <h5 className="card-title">{movie.title || 'Untitled'}</h5>
+                      <h5 className="card-title">{show.name || 'Untitled'}</h5>
                       <div className="d-flex justify-content-between align-items-center">
                         <p className="release-date mb-0">
-                          {movie.release_date
-                            ? new Date(movie.release_date).toLocaleDateString('en-US', {
+                          {show.first_air_date
+                            ? new Date(show.first_air_date).toLocaleDateString('en-US', {
                                 month: 'short',
                                 day: 'numeric',
                                 year: 'numeric',
@@ -148,10 +146,10 @@ function MoviesList() {
                             : 'Unknown Date'}
                         </p>
                         <i
-                          className={`bi ${isInWishlist(movie.id) ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          className={`bi ${isInWishlist(show.id) ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
                           onClick={(e) => {
                             e.preventDefault();
-                            handleToggleWishlist(movie);
+                            handleToggleWishlist(show);
                           }}
                         ></i>
                       </div>
@@ -161,7 +159,7 @@ function MoviesList() {
               );
             })
           ) : (
-            <p className="text-center">No movies found.</p>
+            <p className="text-center">No TV shows found.</p>
           )}
         </div>
 
@@ -196,4 +194,4 @@ function MoviesList() {
   );
 }
 
-export default MoviesList;
+export default TVShows;
