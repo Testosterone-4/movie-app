@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import MoviesList from './pages/MoviesList';
 import Wishlist from './pages/Wishlist';
 
+
 function App() {
   return (
     <Provider store={store}>
@@ -12,6 +13,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<MoviesList />} />
+          <Route path="/movie/:id" element={<MovieDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
       </BrowserRouter>
