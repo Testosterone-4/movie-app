@@ -1,85 +1,76 @@
-@import "bootstrap/dist/css/bootstrap.min.css";
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   background-color: #f5f5f5;
 }
 
 /* Navbar */
 .navbar {
-  background-color: #ffc107;
-  padding: 15px 0;
+  background-color: #ffc107 !important; /* Yellow from Figma */
 }
 
 .navbar-brand {
   font-size: 24px;
   font-weight: 700;
-  color: #000;
 }
 
-.language-dropdown {
-  width: 60px;
-  border: none;
-  background-color: transparent;
+.nav-link {
   font-weight: 500;
+}
+
+.custom-light-bg {
+  background-color: #ffc107 !important; /* Yellow from Figma */
+}
+
+.navbar-dark {
+  background-color: #343a40 !important; /* Dark theme */
+}
+
+.custom-toggler-light .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 .wishlist-link {
   display: flex;
   align-items: center;
-  color: #000;
   text-decoration: none;
-  font-weight: 500;
 }
 
 .wishlist-link .heart-icon {
   font-size: 20px;
   margin-right: 5px;
+  color: #000; /* Black in Navbar to match Figma */
 }
 
-/* Hero Section */
-.hero-section {
+/* Theme-specific styles */
+.light-mode {
   background-color: #f5f5f5;
-  padding: 50px 0;
-  text-align: center;
-}
-
-.hero-title {
-  font-size: 36px;
-  font-weight: 700;
   color: #000;
-  margin-bottom: 10px;
 }
 
-.hero-subtitle {
-  font-size: 16px;
-  color: #6c757d;
-  margin-bottom: 30px;
+.dark-mode {
+  background-color: #212529;
+  color: #fff;
 }
 
+/* Search Form */
 .search-form {
   display: flex;
   justify-content: center;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .search-input {
   border: 1px solid #ced4da;
-  border-radius: 25px 0 0 25px;
+  border-radius: 25px;
   padding: 10px 20px;
   font-size: 16px;
 }
 
-.search-btn {
-  background-color: #ffc107;
-  border: none;
-  border-radius: 0 25px 25px 0;
-  padding: 10px 20px;
-  font-weight: 500;
-  color: #000;
-}
-
-/* Movies Section */
+/* Movies and TV Shows Sections */
 .section-title {
   font-size: 24px;
   font-weight: 700;
@@ -135,6 +126,11 @@ body {
 .heart-icon {
   font-size: 20px;
   cursor: pointer;
+  color: #ffc107; /* Yellow from Figma */
+}
+
+.heart-icon.bi-heart-fill {
+  color: #ff0000; /* Red when filled (in wishlist) */
 }
 
 /* Pagination */
@@ -152,5 +148,28 @@ body {
 }
 
 .pagination .page-item.disabled .page-link {
+  color: #6c757d;
+}
+
+/* Dark mode adjustments */
+.dark-mode .section-title,
+.dark-mode .card-title {
+  color: #fff;
+}
+
+.dark-mode .release-date {
+  color: #adb5bd;
+}
+
+.dark-mode .pagination .page-link {
+  color: #fff;
+}
+
+.dark-mode .pagination .page-item.active .page-link {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.dark-mode .pagination .page-item.disabled .page-link {
   color: #6c757d;
 }
