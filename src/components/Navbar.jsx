@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+import { selectWishlistCount } from '../store/wishlistSlice';
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Sun, Moon, Globe } from "react-bootstrap-icons";
@@ -63,7 +65,6 @@ const Navbar = () => {
           </span>
           <span className="text-primary">Hub</span>
         </Link>
-
         <button
           className={`navbar-toggler ${
             theme === "light" ? "border-dark" : "border-light"

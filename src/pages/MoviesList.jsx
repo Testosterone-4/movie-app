@@ -1,3 +1,4 @@
+import { toggleWishlist, selectWishlistItems } from '../store/wishlistSlice';
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -9,6 +10,7 @@ function MoviesList() {
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   const movies = useSelector((state) => state.movies.list);
+  const wishlistItems = useSelector(selectWishlistItems);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
   const { searchResults, searchLoading, handleSearch } = useMovieSearch();
@@ -64,8 +66,17 @@ function MoviesList() {
     return <div className="text-center py-5">Searching...</div>;
   }
 
+  const handleToggleWishlist = (movie) => {
+    dispatch(toggleWishlist(movie));
+  };
+
+  const isInWishlist = (movieId) => {
+    return wishlistItems.some(item => item.id === movieId);
+  };
+
   return (
     <div className="movies-list">
+      <div className="container mt-5">
       {/* Hero Section */}
       <div className="hero-section">
         <div className="container mt-5">
@@ -100,48 +111,48 @@ function MoviesList() {
       </div>
 
       {/* Movies Section */}
-      <div className="container mt-5">
         <h2 className="section-title">Now Playing</h2>
         <div className="row">
-          {movies.map((movie) => {
-            const rating = Math.round(movie.vote_average * 10);
-            return (
-              <div key={movie.id} className="col-lg-2 col-md-4 col-sm-6 mb-4">
-                <div className="movie-card">
-                  <Link to={`/movie/${movie.id}`}>
-                    <div className="poster-wrapper">
-                      <img
-                        src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                        className="card-img-top"
-                        alt={movie.title}
-                      />
-                      <span className="rating-badge">{rating}</span>
-                    </div>
-                  </Link>
-                  <div className="card-body p-0 mt-2">
-                    <h5 className="card-title">{movie.title}</h5>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <p className="release-date mb-0">
-                        {new Date(movie.release_date).toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          }
-                        )}
-                      </p>
-                      <span className="heart-icon">🤍</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        {movies.map((movie) => {
+  const rating = Math.round(movie.vote_average * 10);
+  return (
+    <div key={movie.id} className="col-lg-2 col-md-4 col-sm-6 mb-4">
+      <div className="movie-card">
+        <Link to={`/movie/${movie.id}`}>
+          <div className="poster-wrapper">
+            <img
+              src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+              className="card-img-top"
+              alt={movie.title}
+            />
+            <span className="rating-badge">{rating}</span>
+          </div>
+        </Link>
+        <div className="card-body p-0 mt-2">
+          <h5 className="card-title">{movie.title}</h5>
+          <div className="d-flex justify-content-between align-items-center">
+            <p className="release-date mb-0">
+              {new Date(movie.release_date).toLocaleDateString()}
+            </p>
+            <span 
+              className={`heart-icon ${isInWishlist(movie.id) ? 'filled' : ''}`}
+              onClick={(e) => {
+                e.preventDefault();
+                handleToggleWishlist(movie);
+              }}
+            >
+              {isInWishlist(movie.id) ? '❤️' : '🤍'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+})}
         </div>
 
-        {/* Pagination */}
-        <nav aria-label="Page navigation" className="mt-4">
+        {/* Pagination (unchanged) */}
+        <nav aria-label="Page navigation" className="mt-4">          
           <ul className="pagination justify-content-center">
             <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
               <button
@@ -169,6 +180,7 @@ function MoviesList() {
             </li>
           </ul>
         </nav>
+        {/* ... */}
       </div>
     </div>
   );
