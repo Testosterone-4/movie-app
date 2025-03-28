@@ -2,11 +2,13 @@ import { useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sun, Moon, Globe } from 'react-bootstrap-icons';
+import { selectWishlistCount } from '../store/wishlistSlice';
 
 const Navbar = () => {
   const [theme, setTheme] = useState('light');
   const [language, setLanguage] = useState('en');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const count = useSelector(selectWishlistCount);
 
   // Load saved preferences
   useEffect(() => {
@@ -124,14 +126,21 @@ const Navbar = () => {
           <div className="d-flex align-items-center">
             {/* Watchlist Link */}
             <Link
-              to="/wishlist"
-              className={`nav-link me-3 ${
-                theme === 'light' ? 'text-dark' : 'text-light'
-              }`}
-            >
-              <i className="bi bi-heart heart-icon"></i>
-              <span className="ms-1">Watchlist</span>
-            </Link>
+  to="/wishlist"
+  className={`nav-link me-3 position-relative ${
+    theme === 'light' ? 'text-dark' : 'text-light'
+  }`}
+>
+  <i className={`bi bi-heart-fill heart-icon ${
+    theme === 'light' ? 'text-danger' : 'text-white'
+  }`}></i>
+  <span className="ms-1">Watchlist</span>
+  {count > 0 && (
+    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      {count}
+    </span>
+  )}
+</Link>
 
             {/* Language Dropdown */}
             <div className="dropdown me-3">

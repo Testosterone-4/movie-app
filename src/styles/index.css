@@ -173,3 +173,21 @@ body {
 .dark-mode .pagination .page-item.disabled .page-link {
   color: #6c757d;
 }
+.main-content {
+  padding-top: 80px; /* Match navbar height */
+}
+/* Heart icon styling */
+.heart-icon {
+  font-size: 1.1rem;
+  transition: transform 0.2s;
+}
+
+/* Dark red color for light mode */
+.navbar-light .heart-icon.text-danger {
+  color: #6c757d !important; /* Bootstrap's danger color */
+}
+
+/* Pure white for dark mode */
+.navbar-dark .heart-icon.text-white {
+  color: #ffc107 !important;
+}
