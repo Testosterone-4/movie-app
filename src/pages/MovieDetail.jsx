@@ -139,14 +139,14 @@ const MovieDetail = () => {
   return (
     <>
       <div
-        className={`min-vh-30 p-5 mt-5 ${
-          theme === "dark" ? "bg-dark" : "bg-light"
+        className={`min-vh-30 p-5 m-5 ${
+          theme === "dark" ? "bg-dark" : ""
         }`}
       >
         <Container>
           <Card
             className={`border-0 shadow-lg overflow-hidden ${
-              theme === "dark" ? "bg-dark text-light" : "bg-light"
+              theme === "dark" ? "bg-dark text-light" : ""
             }`}
             style={{
               maxWidth: "90vw",
@@ -310,10 +310,10 @@ e Column */}
         </Container>
       </div>
 
-      <div className="container mb-5 bg-light p-3 rounded-3 shadow-sm">
+<div className={"container mb-5 bg-light p-3 rounded-3 shadow-sm" }>
   <h1 
     className="bold" 
-    style={{ marginBottom: '20px', cursor: 'pointer' }}
+    style={{ marginBottom: '20px', cursor: 'pointer'  }}
     onClick={toggleReviews}
   >
     Reviews <span style={{ fontSize: '0.7em' }}>{showReviews ? '▼' : '▶'}</span>
