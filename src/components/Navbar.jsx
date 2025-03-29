@@ -110,16 +110,7 @@ const Navbar = () => {
                 TV Shows
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                className={`nav-link ${
-                  theme === "light" ? "text-dark" : "text-white"
-                }`}
-                to="/about"
-              >
-                About
-              </Link>
-            </li>
+           
           </ul>
 
           <div className="d-flex align-items-center">
