@@ -1,17 +1,24 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import api from '../services/api';
-import { toggleWishlist, selectWishlistItems } from '../store/wishlistSlice';
-import { useTVSearch } from '../store/useTVSearch'; 
+import { useEffect, useState, useCallback, useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import api from "../services/api";
+import { toggleWishlist, selectWishlistItems } from "../store/wishlistSlice";
+import { useTVSearch } from "../store/useTVSearch";
+import { ThemeContext } from "../context/ThemeContext";
+
 function TVShows() {
+  const { theme } = useContext(ThemeContext);
   const [tvShows, setTvShows] = useState([]);
   const [page, setPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
   const dispatch = useDispatch();
   const wishlistItems = useSelector(selectWishlistItems);
-  const { searchResults: tvSearchResults, searchLoading: tvSearchLoading, handleSearch: handleTVSearch } = useTVSearch();
+  const {
+    searchResults: tvSearchResults,
+    searchLoading: tvSearchLoading,
+    handleSearch: handleTVSearch,
+  } = useTVSearch();
 
   // Debounce function for search
   const debounce = (func, delay) => {
@@ -60,7 +67,7 @@ function TVShows() {
 
   // Clear search
   const handleClearSearch = () => {
-    setSearchQuery('');
+    setSearchQuery("");
     setIsSearchActive(false);
   };
 
@@ -110,12 +117,14 @@ function TVShows() {
 
         {/* TV Shows Section */}
         <h2 className="section-title">
-          {isSearchActive ? 'Search Results' : 'On The Air TV Shows'}
+          {isSearchActive ? "Search Results" : "On The Air TV Shows"}
         </h2>
         <div className="row">
           {tvShows && tvShows.length > 0 ? (
             tvShows.map((show) => {
-              const rating = show.vote_average ? Math.round(show.vote_average * 10) : 'N/A';
+              const rating = show.vote_average
+                ? Math.round(show.vote_average * 10)
+                : "N/A";
               return (
                 <div key={show.id} className="col-lg-2 col-md-4 col-sm-6 mb-4">
                   <div className="movie-card">
@@ -125,28 +134,33 @@ function TVShows() {
                           src={
                             show.poster_path
                               ? `https://image.tmdb.org/t/p/w500/${show.poster_path}`
-                              : 'https://via.placeholder.com/200x300?text=No+Image'
+                              : "https://via.placeholder.com/200x300?text=No+Image"
                           }
                           className="card-img-top"
-                          alt={show.name || 'TV Show'}
+                          alt={show.name || "TV Show"}
                         />
                         <span className="rating-badge">{rating}</span>
                       </div>
                     </Link>
                     <div className="card-body p-0 mt-2">
-                      <h5 className="card-title">{show.name || 'Untitled'}</h5>
+                      <h5 className="card-title">{show.name || "Untitled"}</h5>
                       <div className="d-flex justify-content-between align-items-center">
                         <p className="release-date mb-0">
                           {show.first_air_date
-                            ? new Date(show.first_air_date).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                              })
-                            : 'Unknown Date'}
+                            ? new Date(show.first_air_date).toLocaleDateString(
+                                "en-US",
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                }
+                              )
+                            : "Unknown Date"}
                         </p>
                         <i
-                          className={`bi ${isInWishlist(show.id) ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          className={`bi ${
+                            isInWishlist(show.id) ? "bi-heart-fill" : "bi-heart"
+                          } heart-icon`}
                           onClick={(e) => {
                             e.preventDefault();
                             handleToggleWishlist(show);
@@ -166,9 +180,11 @@ function TVShows() {
         {/* Pagination */}
         <nav aria-label="Page navigation" className="mt-4">
           <ul className="pagination justify-content-center">
-            <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
+            <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
               <button
-                className="page-link"
+                className={`page-link ${
+                  theme === "dark" ? "bg-dark text-light border-secondary" : ""
+                }`}
                 onClick={() => setPage(page - 1)}
                 disabled={page === 1}
               >
@@ -176,14 +192,29 @@ function TVShows() {
               </button>
             </li>
             {[1, 2, 3, 4, 5].map((num) => (
-              <li key={num} className={`page-item ${page === num ? 'active' : ''}`}>
-                <button className="page-link" onClick={() => setPage(num)}>
+              <li
+                key={num}
+                className={`page-item ${page === num ? "active" : ""}`}
+              >
+                <button
+                  className={`page-link ${
+                    theme === "dark"
+                      ? "bg-dark text-light border-secondary"
+                      : ""
+                  } ${page === num && theme === "dark" ? "active-dark" : ""}`}
+                  onClick={() => setPage(num)}
+                >
                   {num}
                 </button>
               </li>
             ))}
             <li className="page-item">
-              <button className="page-link" onClick={() => setPage(page + 1)}>
+              <button
+                className={`page-link ${
+                  theme === "dark" ? "bg-dark text-light border-secondary" : ""
+                }`}
+                onClick={() => setPage(page + 1)}
+              >
                 »
               </button>
             </li>

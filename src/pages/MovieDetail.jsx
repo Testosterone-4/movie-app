@@ -1,5 +1,5 @@
 import { Container, Row, Col, Card, Badge, Alert } from "react-bootstrap";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
 import Loader from "../components/Loader";
@@ -7,6 +7,7 @@ import CardList from "../components/Card";
 import { toggleWishlist, selectWishlistItems } from "../store/wishlistSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ThemeContext } from "../context/ThemeContext";
+import { useLanguageEffect } from "../hooks/useLanguageEffect";
 
 const MovieDetail = () => {
   const [movie, setMovie] = useState(null);
@@ -14,6 +15,7 @@ const MovieDetail = () => {
   const wishlistItems = useSelector(selectWishlistItems);
   const dispatch = useDispatch();
   const { theme } = useContext(ThemeContext);
+  const { id } = useParams();
 
   // Toggle wishlist
   const handleToggleWishlist = (movie) => {

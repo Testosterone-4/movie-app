@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { selectWishlistCount } from "../store/wishlistSlice";
 import { Link } from "react-router-dom";
@@ -12,6 +12,8 @@ const Navbar = () => {
   const { language, changeLanguage } = useLanguage();
   const wishlistCount = useSelector(selectWishlistCount);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const languages = [
     { code: "en", name: "English", dir: "ltr" },
@@ -20,13 +22,30 @@ const Navbar = () => {
     { code: "zh", name: "中文", dir: "ltr" },
   ];
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleLanguageChange = (newLanguage) => {
     changeLanguage(newLanguage);
+    setDropdownOpen(false);
     setIsMenuOpen(false);
   };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleDropdown = (e) => {
+    e.stopPropagation();
+    setDropdownOpen(!dropdownOpen);
   };
 
   return (
@@ -122,18 +141,14 @@ const Navbar = () => {
               <span className="ms-2 visually-hidden">Watchlist</span>
             </Link>
 
-            <div className="dropdown me-3">
+            <div className="dropdown me-3" ref={dropdownRef}>
               <button
                 className={`btn ${
                   theme === "light" ? "btn-outline-dark" : "btn-outline-light"
                 } dropdown-toggle d-flex align-items-center`}
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  document
-                    .querySelector(".dropdown-menu")
-                    .classList.toggle("show");
-                }}
+                onClick={toggleDropdown}
+                aria-expanded={dropdownOpen}
               >
                 <Globe className="me-2" />
                 <span className="language-text">
@@ -141,8 +156,9 @@ const Navbar = () => {
                 </span>
               </button>
               <ul
-                className="dropdown-menu dropdown-menu-end"
-                onClick={(e) => e.stopPropagation()}
+                className={`dropdown-menu dropdown-menu-end ${
+                  dropdownOpen ? "show" : ""
+                }`}
               >
                 {languages.map((lang) => (
                   <li key={lang.code}>
