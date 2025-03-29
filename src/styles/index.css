@@ -190,3 +190,7 @@ body {
   margin-right: 0.25rem !important;
   margin-left: 0 !important;
 }
+
+.main-content {
+  padding-top: 80px; /* Match navbar height */
+}
