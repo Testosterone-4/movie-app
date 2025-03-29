@@ -4,15 +4,15 @@ import { selectWishlistCount } from "../store/wishlistSlice";
 import { Link } from "react-router-dom";
 import { Heart, HeartFill, Sun, Moon, Globe } from "react-bootstrap-icons";
 import { ThemeContext } from "../context/ThemeContext";
-import api from "../services/api"; // Add this import
+import { useLanguage } from "../context/LanguageContext";
+import api from "../services/api";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const { language, changeLanguage } = useLanguage();
   const wishlistCount = useSelector(selectWishlistCount);
-  const [language, setLanguage] = useState("en");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Updated Language options
   const languages = [
     { code: "en", name: "English", dir: "ltr" },
     { code: "ar", name: "العربية", dir: "rtl" },
@@ -20,33 +20,9 @@ const Navbar = () => {
     { code: "zh", name: "中文", dir: "ltr" },
   ];
 
-  // Updated Load saved preferences
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem("language") || "en";
-    setLanguage(savedLanguage);
-    updateDocumentLanguage(savedLanguage);
-    api.updateLanguage(savedLanguage);
-  }, []);
-
-  // Updated Language change function with API integration
-  const changeLanguage = (newLanguage) => {
-    setLanguage(newLanguage);
-    localStorage.setItem("language", newLanguage);
-    updateDocumentLanguage(newLanguage);
-    // Update API language
-    api.updateLanguage(newLanguage);
-    // Force reload data
-    window.dispatchEvent(new Event("languageChange"));
+  const handleLanguageChange = (newLanguage) => {
+    changeLanguage(newLanguage);
     setIsMenuOpen(false);
-  };
-
-  // Updated helper function for document language updates
-  const updateDocumentLanguage = (lang) => {
-    document.dir = lang === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = lang;
-    document.querySelector("html").setAttribute("lang", lang);
-    // Add class to body for RTL/LTR specific styles
-    document.body.classList.toggle("rtl", lang === "ar");
   };
 
   const toggleMenu = () => {
@@ -128,7 +104,6 @@ const Navbar = () => {
           </ul>
 
           <div className="d-flex align-items-center">
-            {/* Updated Wishlist Link with better icon */}
             <Link
               to="/wishlist"
               className={`nav-link me-3 d-flex align-items-center ${
@@ -144,10 +119,9 @@ const Navbar = () => {
                   </span>
                 )}
               </div>
-              <span className="ms-2">Watchlist</span>
+              <span className="ms-2 visually-hidden">Watchlist</span>
             </Link>
 
-            {/* Updated Language Dropdown */}
             <div className="dropdown me-3">
               <button
                 className={`btn ${
@@ -176,7 +150,7 @@ const Navbar = () => {
                       className={`dropdown-item ${
                         language === lang.code ? "active" : ""
                       }`}
-                      onClick={() => changeLanguage(lang.code)}
+                      onClick={() => handleLanguageChange(lang.code)}
                       dir={lang.dir}
                     >
                       {lang.name}
@@ -186,7 +160,6 @@ const Navbar = () => {
               </ul>
             </div>
 
-            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className={`btn ${
