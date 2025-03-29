@@ -9,12 +9,11 @@ export default function CardList(movie) {
     const wishlistItems = useSelector(selectWishlistItems);
     const dispatch = useDispatch();
   
-    // Toggle wishlist
+    
     const handleToggleWishlist = (movie) => {
       dispatch(toggleWishlist(movie));
     };
   
-    // Check if a movie is in the wishlist
     const isInWishlist = (movieId) => {
       return wishlistItems.some((item) => item.id === movieId);
     };
