@@ -1,0 +1,158 @@
+
+.reviews-section {
+    padding: 2rem 0;
+  }
+  
+  .reviews-grid {
+    display: grid;
+    gap: 2rem;
+  }
+  
+  .review-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .avatar-img {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .avatar-placeholder {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .author-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .author-meta {
+    margin-left: 57px; 
+  }
+  
+  .author-rating {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+  }
+  
+  .rating-value {
+    font-weight: 600;
+    margin-left: 4px;
+  }
+  
+  .review-date {
+    font-size: 0.85rem;
+    color: #888;
+  }
+  
+  
+  .review-content {
+    margin: 1rem 0;
+    line-height: 1.6;
+    color: #333;
+  }
+  
+  .review-paragraph {
+    margin-bottom: 1rem;
+  }
+  
+  .review-paragraph:last-child {
+    margin-bottom: 0;
+  }
+  
+  
+  .read-more-container {
+    margin-top: 1rem;
+  }
+  
+  .read-more-btn {
+    background: none;
+    border: none;
+    color: #0066cc;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .read-more-btn:hover {
+    background-color: rgba(0, 102, 204, 0.1);
+  }
+  
+  .btn-arrow {
+    font-size: 0.9em;
+  }
+  
+ 
+  .review-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .full-review-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease;
+  }
+  
+  .full-review-link:hover {
+    color: #004499;
+    text-decoration: underline;
+  }
+  
+  .link-arrow {
+    font-size: 1.1em;
+  }
+  
+ 
+  .no-reviews {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+  }
+  
+  .no-reviews-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .no-reviews-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .no-reviews-message {
+    font-size: 0.95rem;
+  }

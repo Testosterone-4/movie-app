@@ -4,14 +4,21 @@ import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import Loader from '../components/Loader';
 import CardList from '../components/Card';
+import Reviews from '../components/Reviews';
 import { toggleWishlist, selectWishlistItems } from '../store/wishlistSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const MovieDetail = () => {
   const [movie, setMovie] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [showReviews, setShowReviews] = useState(false);
   const wishlistItems = useSelector(selectWishlistItems);
   const dispatch = useDispatch();
+
+  const toggleReviews = () => {
+    setShowReviews(!showReviews);
+  };
 
   // Toggle wishlist
   const handleToggleWishlist = (movie) => {
@@ -67,6 +74,24 @@ const MovieDetail = () => {
     };
 
     fetchRecommendations();
+  }, [params.id]);
+
+   // Fetch reviews
+   useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setLoading(prev => ({ ...prev, reviews: true }));
+        const response = await api.get(`/movie/${params.id}/reviews`);
+        setReviews(response.data.results || []);
+      } catch (err) {
+        console.error('Failed to fetch reviews:', err);
+        setError(prev => ({ ...prev, reviews: 'Failed to load reviews' }));
+      } finally {
+        setLoading(prev => ({ ...prev, reviews: false }));
+      }
+    };
+
+    fetchReviews();
   }, [params.id]);
 
   
@@ -245,7 +270,17 @@ const MovieDetail = () => {
           </Card>
         </Container>
       </div>
-      
+      <div className="container mb-5 bg-light p-3 rounded-3 shadow-sm">
+  <h1 
+    className="bold" 
+    style={{ marginBottom: '20px', cursor: 'pointer' }}
+    onClick={toggleReviews}
+  >
+    Reviews <span style={{ fontSize: '0.7em' }}>{showReviews ? '▼' : '▶'}</span>
+  </h1>
+  {showReviews && <Reviews reviews={reviews} />}
+</div>
+          
       <hr />
       
       <div className="container mb-5">
