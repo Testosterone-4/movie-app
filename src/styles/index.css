@@ -1,66 +1,75 @@
-@import 'bootstrap/dist/css/bootstrap.min.css';
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
 
+:root {
+  /* Light theme defaults */
+  --navbar-color: #ffc107; /* Yellow navbar */
+  --bg-color: #ffffff; /* White body */
+  --text-color: #000000;
+  --card-bg: #f8f9fa;
+}
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #f5f5f5;
+  font-family: "Poppins", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
 }
 
 /* Navbar */
 .navbar {
-  background-color: #ffc107 !important; /* Yellow from Figma */
+  background-color: var(--navbar-color) !important;
+  padding: 15px 0;
 }
 
 .navbar-brand {
   font-size: 24px;
   font-weight: 700;
+  color: var(--text-color);
 }
 
-.nav-link {
+.language-dropdown {
+  width: 60px;
+  border: none;
+  background-color: transparent;
   font-weight: 500;
-}
-
-.custom-light-bg {
-  background-color: #ffc107 !important; /* Yellow from Figma */
-}
-
-.navbar-dark {
-  background-color: #343a40 !important; /* Dark theme */
-}
-
-.custom-toggler-light .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 .wishlist-link {
   display: flex;
   align-items: center;
+  color: var(--text-color);
   text-decoration: none;
+  font-weight: 500;
 }
 
 .wishlist-link .heart-icon {
   font-size: 20px;
   margin-right: 5px;
-  color: #000; /* Black in Navbar to match Figma */
 }
 
-/* Theme-specific styles */
-.light-mode {
+/* Hero Section */
+.hero-section {
   background-color: #f5f5f5;
-  color: #000;
+  padding: 50px 0;
+  text-align: center;
 }
 
-.dark-mode {
-  background-color: #212529;
-  color: #fff;
+.hero-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 10px;
 }
 
-/* Search Form */
+.hero-subtitle {
+  font-size: 16px;
+  color: #6c757d;
+  margin-bottom: 30px;
+}
+
 .search-form {
   display: flex;
   justify-content: center;
-  max-width: 500px;
-  margin: 0 auto;
 }
 
 .search-input {
@@ -69,12 +78,29 @@ body {
   padding: 10px 20px;
   font-size: 16px;
 }
+.search-input-dark::placeholder {
+  color: white !important; /* White placeholder in dark mode */
+}
 
-/* Movies and TV Shows Sections */
+/* For light theme */
+.search-input-light::placeholder {
+  color: black !important; /* Black placeholder in light mode */
+}
+
+.search-btn {
+  background-color: var(--navbar-color);
+  border: none;
+  border-radius: 0 25px 25px 0;
+  padding: 10px 20px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+/* Movies Section */
 .section-title {
   font-size: 24px;
   font-weight: 700;
-  color: #000;
+  color: var(--text-color);
   margin-bottom: 20px;
 }
 
@@ -100,7 +126,7 @@ body {
   top: 10px;
   right: 10px;
   background-color: #28a745;
-  color: #fff;
+  color: var(--bg-color);
   font-size: 14px;
   font-weight: 500;
   width: 40px;
@@ -114,7 +140,7 @@ body {
 .card-title {
   font-size: 16px;
   font-weight: 500;
-  color: #000;
+  color: var(--text-color);
   margin-bottom: 5px;
 }
 
@@ -126,24 +152,19 @@ body {
 .heart-icon {
   font-size: 20px;
   cursor: pointer;
-  color: #ffc107; /* Yellow from Figma */
-}
-
-.heart-icon.bi-heart-fill {
-  color: #ff0000; /* Red when filled (in wishlist) */
 }
 
 /* Pagination */
 .pagination .page-link {
-  color: #000;
+  color: var(--text-color);
   border: none;
   margin: 0 5px;
   font-weight: 500;
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #ffc107;
-  color: #000;
+  background-color: var(--navbar-color);
+  color: var(--text-color);
   border-radius: 5px;
 }
 
@@ -151,43 +172,21 @@ body {
   color: #6c757d;
 }
 
-/* Dark mode adjustments */
-.dark-mode .section-title,
-.dark-mode .card-title {
-  color: #fff;
+/* RTL Support */
+[dir="rtl"] .movie-card {
+  text-align: right;
 }
 
-.dark-mode .release-date {
-  color: #adb5bd;
+[dir="rtl"] .pagination {
+  flex-direction: row-reverse;
 }
 
-.dark-mode .pagination .page-link {
-  color: #fff;
+[dir="rtl"] .me-3 {
+  margin-left: 1rem !important;
+  margin-right: 0 !important;
 }
 
-.dark-mode .pagination .page-item.active .page-link {
-  background-color: #ffc107;
-  color: #000;
-}
-
-.dark-mode .pagination .page-item.disabled .page-link {
-  color: #6c757d;
-}
-.main-content {
-  padding-top: 80px; /* Match navbar height */
-}
-/* Heart icon styling */
-.heart-icon {
-  font-size: 1.1rem;
-  transition: transform 0.2s;
-}
-
-/* Dark red color for light mode */
-.navbar-light .heart-icon.text-danger {
-  color: #6c757d !important; /* Bootstrap's danger color */
-}
-
-/* Pure white for dark mode */
-.navbar-dark .heart-icon.text-white {
-  color: #ffc107 !important;
+[dir="rtl"] .ms-1 {
+  margin-right: 0.25rem !important;
+  margin-left: 0 !important;
 }
