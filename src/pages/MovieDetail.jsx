@@ -17,6 +17,8 @@ const MovieDetail = () => {
   const wishlistItems = useSelector(selectWishlistItems);
   const dispatch = useDispatch();
   const { theme } = useContext(ThemeContext);
+  const [isExpanded, setIsExpanded] = useState(false);
+
 
   const toggleReviews = () => {
     setShowReviews(!showReviews);
@@ -129,18 +131,18 @@ const MovieDetail = () => {
 
   return (
     <>
-      <div className="min-vh-30 p-5 mt-5 ">
-        <Container>
-        <Card 
-         className="border-0 shadow-lg overflow-hidden" 
-        style={{ 
+      <div className="min-vh-30 p-5 mt-5">
+  <Container>
+    <Card 
+      className="border-0 shadow-lg overflow-hidden" 
+      style={{ 
         maxWidth: '90vw', 
-        maxHeight: '75vh',
+        maxHeight: 'none',
         margin: '0 auto',
-        background:  theme === "dark" ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)'
+        background: theme === "dark" ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)'
       }}
     >
-            <div 
+      <div 
         className="position-absolute" 
         style={{
           top: '15px',
@@ -156,131 +158,151 @@ const MovieDetail = () => {
             e.preventDefault();
             handleToggleWishlist(movie);
           }}
-        
         ></i>
       </div>
-            <Row className="g-0">
-              {/* Image Column */}
-              <Col md={3} className="position-relative">
-                <div className="p-3 h-100 d-flex align-items-center">
-                  <Card.Img 
-                    src={movie.poster_path 
-                      ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-                      : '/placeholder-movie.png'}
-                    alt={`${movie.title} Poster`}
-                    className="rounded-3 img-fluid"
-                    style={{
-                      height: '90%',
-                      objectFit: 'cover',
-                      boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
-                      transition: 'transform 0.3s ease',
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                  />
-                </div>
-              </Col>
-  
-              {/* Content Column */}
-              <Col md={9} className="d-flex flex-column">
-                <Card.Body className="p-2 p-lg-5 d-flex flex-column h-100">
-                  {/* Header Section */}
-                  <div className="mb-4">
-                  <Card.Title as="h1" className="fw-bolder mb-2" style={{ 
-        fontSize: '2rem',
-        color: theme === "dark" ? 'white' : 'inherit'
-      }}>
-        {movie.title}
-      </Card.Title>
+      <Row className="g-0">
+        {/* Image Column */}
+        <Col xs={12} md={3} className="position-relative">
+          <div className="p-3 h-100 d-flex align-items-center justify-content-center">
+            <Card.Img 
+              src={movie.poster_path 
+                ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+                : '/placeholder-movie.png'}
+              alt={`${movie.title} Poster`}
+              className="rounded-3 img-fluid"
+              style={{
+                height: 'auto',
+                maxHeight: '400px',
+                width: 'auto',
+                maxWidth: '100%',
+                objectFit: 'cover',
+                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
+                transition: 'transform 0.3s ease',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            />
+          </div>
+        </Col>
 
-           <div className="d-flex flex-wrap gap-4 align-items-center mb-3">
-                    <div className="small fw-light" style={{ color: theme === "dark" ? '#bbb' : 'text-muted' }}>
+        {/* Content Column */}
+        <Col xs={12} md={9} className="d-flex flex-column">
+          <Card.Body className="p-2 p-lg-5 d-flex flex-column h-100">
+            {/* Header Section */}
+            <div className="mb-4">
+              <Card.Title as="h1" className="fw-bolder mb-2" style={{ 
+                fontSize: '2rem',
+                color: theme === "dark" ? 'white' : 'inherit'
+              }}>
+                {movie.title}
+              </Card.Title>
+
+              <div className="d-flex flex-wrap gap-4 align-items-center mb-3">
+                <div className="small fw-light" style={{ color: theme === "dark" ? '#bbb' : 'text-muted' }}>
                   {movie.release_date && new Date(movie.release_date).toLocaleDateString('en-US', {
-                  month: 'long',
-                  day: 'numeric',
-                 year: 'numeric'
-              })}
-               </div>
-          </div>  
-                    
-            <div className="d-flex align-items-center p-2 rounded">
-                 <i className={`bi bi-star-fill ${theme === "dark" ? 'text-light' : 'text-dark'} me-1`} />
-                 <i className={`bi bi-star-fill ${theme === "dark" ? 'text-light' : 'text-dark'} me-1`} />
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </div>
+              </div>  
+              
+              <div className="d-flex align-items-center p-2 rounded">
+                <i className={`bi bi-star-fill ${theme === "dark" ? 'text-light' : 'text-dark'} me-1`} />
+                <i className={`bi bi-star-fill ${theme === "dark" ? 'text-light' : 'text-dark'} me-1`} />
                 <i className={`bi bi-star-fill ${theme === "dark" ? 'text-light' : 'text-dark'} me-1`} />
                 <i className={`bi bi-star ${theme === "dark" ? 'text-light' : 'text-dark'} me-1`} />
-               <i className={`bi bi-star ${theme === "dark" ? 'text-light' : 'text-dark'} me-2`} />
-           <span className={theme === "dark" ? "text-light" : "text-muted"}>{movie.vote_count} votes</span>
+                <i className={`bi bi-star ${theme === "dark" ? 'text-light' : 'text-dark'} me-2`} />
+                <span className={theme === "dark" ? "text-light" : "text-muted"}>{movie.vote_count} votes</span>
+              </div>
             </div>
-           </div>
-  
-                  {/* Description Section */}
-                  <Card.Text 
-  className="fs-7" 
-  style={{ 
-    lineHeight: 1.6,
-    color: theme === "dark" ? '#eee' : 'inherit'
-  }}
->
-  {movie.overview || 'No overview available.'}
-</Card.Text>
-  
-                  {/* Genres */}
-                  {movie.genres?.length > 0 && (
-                    <div className="d-flex flex-wrap gap-2 mb-4">
-                      {movie.genres.map((genre) => (
-                        <Badge 
-                          key={genre.id} 
-                          pill 
-                          className="px-3 py-2 fs-6 fw-medium bg-warning text-dark"
-                        >
-                          {genre.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                  
-                  <div className="d-flex flex-wrap gap-4 mb-4">
-  {movie.runtime && (
-    <span>
-      <span className="fw-medium" style={{ color: theme === "dark" ? '#ddd' : 'inherit' }}>Duration: </span>
-      <span style={{ color: theme === "dark" ? '#bbb' : '#6c757d' }}>{movie.runtime} Min</span>
-    </span>
-  )}
-  
-  {movie.spoken_languages?.length > 0 && (
-    <span>
-      <span className="fw-medium" style={{ color: theme === "dark" ? '#ddd' : 'inherit' }}>Language: </span>
-      <span style={{ color: theme === "dark" ? '#bbb' : '#6c757d' }}>
-        {movie.spoken_languages[0].name}
-      </span>
-    </span>
-  )}
-</div>
-  
-                  {/* Studio Info */}
-                  {movie.production_companies?.length > 0 && (
-                    <div className="d-flex gap-3 align-items-center">
-                      <div className="px-3 py-2 bg-danger text-white fs-6">
-                        {movie.production_companies.map((company) => (
-                          company.logo_path && (
-                            <img 
-                              key={company.id}
-                              src={`https://image.tmdb.org/t/p/w92${company.logo_path}`} 
-                              alt={company.name}
-                              className="company-logo mx-1"
-                              style={{ height: '24px' }}
-                            />
-                          )
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </Card.Body>
-              </Col>
-            </Row>
-          </Card>
-        </Container>
+
+            {/* Description Section with Read More */}
+            <div className="mb-4">
+        <Card.Text 
+          className="fs-7" 
+          style={{ 
+            lineHeight: 1.6,
+            color: theme === "dark" ? '#eee' : 'inherit',
+            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitLineClamp: isExpanded ? 'unset' : 3,
+            WebkitBoxOrient: 'vertical'
+          }}
+        >
+          {movie.overview || 'No overview available.'}
+        </Card.Text>
+        {movie.overview && movie.overview.length > 150 && (
+          <button 
+            className="btn btn-link p-0 text-decoration-none"
+            style={{
+              color: theme === "dark" ? '#4dabf7' : '#1c7ed6',
+              fontSize: '0.875rem'
+            }}
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {isExpanded ? 'Read less' : 'Read more'}
+          </button>
+        )}
       </div>
+
+            {/* Genres */}
+            {movie.genres?.length > 0 && (
+              <div className="d-flex flex-wrap gap-2 mb-4">
+                {movie.genres.map((genre) => (
+                  <Badge 
+                    key={genre.id} 
+                    pill 
+                    className="px-3 py-2 fs-6 fw-medium bg-warning text-dark"
+                  >
+                    {genre.name}
+                  </Badge>
+                ))}
+              </div>
+            )}
+            
+            <div className="d-flex flex-wrap gap-4 mb-4">
+              {movie.runtime && (
+                <span>
+                  <span className="fw-medium" style={{ color: theme === "dark" ? '#ddd' : 'inherit' }}>Duration: </span>
+                  <span style={{ color: theme === "dark" ? '#bbb' : '#6c757d' }}>{movie.runtime} Min</span>
+                </span>
+              )}
+              
+              {movie.spoken_languages?.length > 0 && (
+                <span>
+                  <span className="fw-medium" style={{ color: theme === "dark" ? '#ddd' : 'inherit' }}>Language: </span>
+                  <span style={{ color: theme === "dark" ? '#bbb' : '#6c757d' }}>
+                    {movie.spoken_languages[0].name}
+                  </span>
+                </span>
+              )}
+            </div>
+
+            {/* Studio Info */}
+            {movie.production_companies?.length > 0 && (
+              <div className="d-flex gap-3 align-items-center">
+                <div className="px-3 py-2 bg-danger text-white fs-6">
+                  {movie.production_companies.map((company) => (
+                    company.logo_path && (
+                      <img 
+                        key={company.id}
+                        src={`https://image.tmdb.org/t/p/w92${company.logo_path}`} 
+                        alt={company.name}
+                        className="company-logo mx-1"
+                        style={{ height: '24px' }}
+                      />
+                    )
+                  ))}
+                </div>
+              </div>
+            )}
+          </Card.Body>
+        </Col>
+      </Row>
+    </Card>
+  </Container>
+</div>
       <div className={`container mb-5 p-3 rounded-3 shadow-sm ${ theme === "dark" ? 'bg-dark' : 'bg-light'}`}>
   <h1 
     className="bold" 
