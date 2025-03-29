@@ -6,6 +6,7 @@ import api from "../services/api";
 import { setMovies } from "../store/moviesSlice";
 import { useMovieSearch } from "../store/useMovieSearch";
 import { ThemeContext } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
 
 function MoviesList() {
   const [page, setPage] = useState(1);
@@ -16,6 +17,7 @@ function MoviesList() {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const { searchResults, searchLoading, handleSearch } = useMovieSearch();
   const { theme } = useContext(ThemeContext);
+  const { language } = useLanguage();
 
   const debounce = (func, delay) => {
     let timer;
@@ -27,11 +29,13 @@ function MoviesList() {
 
   useEffect(() => {
     if (!isSearchActive) {
-      api.get(`/movie/now_playing?page=${page}`).then((response) => {
-        dispatch(setMovies(response.data.results));
-      });
+      api
+        .get(`/movie/now_playing?page=${page}&language=${language}`)
+        .then((response) => {
+          dispatch(setMovies(response.data.results));
+        });
     }
-  }, [page, isSearchActive, dispatch]);
+  }, [page, isSearchActive, dispatch, language]);
 
   useEffect(() => {
     if (isSearchActive && searchResults) {
@@ -77,7 +81,10 @@ function MoviesList() {
   };
 
   return (
-    <div className="movies-list">
+    <div
+      className="movies-list"
+      style={{ direction: language === "ar" ? "rtl" : "ltr" }}
+    >
       <div className="container mt-5">
         {/* Hero Section */}
         <div

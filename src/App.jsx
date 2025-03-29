@@ -5,20 +5,23 @@ import Navbar from "./components/Navbar";
 import MoviesList from "./pages/MoviesList";
 import Wishlist from "./pages/Wishlist";
 import { ThemeProvider } from "./context/ThemeContext";
+import { LanguageProvider } from "./context/LanguageContext";
 
 function App() {
   return (
-    <ThemeProvider>
-      <Provider store={store}>
-        <BrowserRouter>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<MoviesList />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-          </Routes>
-        </BrowserRouter>
-      </Provider>
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider>
+        <Provider store={store}>
+          <BrowserRouter>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<MoviesList />} />
+              <Route path="/wishlist" element={<Wishlist />} />
+            </Routes>
+          </BrowserRouter>
+        </Provider>
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }
 

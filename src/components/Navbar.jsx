@@ -4,6 +4,7 @@ import { selectWishlistCount } from "../store/wishlistSlice";
 import { Link } from "react-router-dom";
 import { Sun, Moon, Globe } from "react-bootstrap-icons";
 import { ThemeContext } from "../context/ThemeContext";
+import api from "../services/api"; // Add this import
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -11,25 +12,41 @@ const Navbar = () => {
   const [language, setLanguage] = useState("en");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Language options
+  // Updated Language options
   const languages = [
     { code: "en", name: "English", dir: "ltr" },
     { code: "ar", name: "العربية", dir: "rtl" },
+    { code: "fr", name: "Français", dir: "ltr" },
+    { code: "zh", name: "中文", dir: "ltr" },
   ];
 
-  // Load saved preferences
+  // Updated Load saved preferences
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language") || "en";
     setLanguage(savedLanguage);
-    document.dir = savedLanguage === "ar" ? "rtl" : "ltr";
+    updateDocumentLanguage(savedLanguage);
+    api.updateLanguage(savedLanguage);
   }, []);
 
-  // Language change function
+  // Updated Language change function with API integration
   const changeLanguage = (newLanguage) => {
     setLanguage(newLanguage);
     localStorage.setItem("language", newLanguage);
-    document.dir = newLanguage === "ar" ? "rtl" : "ltr";
+    updateDocumentLanguage(newLanguage);
+    // Update API language
+    api.updateLanguage(newLanguage);
+    // Force reload data
+    window.dispatchEvent(new Event("languageChange"));
     setIsMenuOpen(false);
+  };
+
+  // Updated helper function for document language updates
+  const updateDocumentLanguage = (lang) => {
+    document.dir = lang === "ar" ? "rtl" : "ltr";
+    document.documentElement.lang = lang;
+    document.querySelector("html").setAttribute("lang", lang);
+    // Add class to body for RTL/LTR specific styles
+    document.body.classList.toggle("rtl", lang === "ar");
   };
 
   const toggleMenu = () => {
@@ -124,12 +141,12 @@ const Navbar = () => {
               </span>
             </Link>
 
-            {/* Language Dropdown */}
+            {/* Updated Language Dropdown */}
             <div className="dropdown me-3">
               <button
                 className={`btn ${
                   theme === "light" ? "btn-outline-dark" : "btn-outline-light"
-                } dropdown-toggle`}
+                } dropdown-toggle d-flex align-items-center`}
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -138,11 +155,13 @@ const Navbar = () => {
                     .classList.toggle("show");
                 }}
               >
-                <Globe className="me-1" />
-                {languages.find((lang) => lang.code === language)?.name}
+                <Globe className="me-2" />
+                <span className="language-text">
+                  {languages.find((lang) => lang.code === language)?.name}
+                </span>
               </button>
               <ul
-                className="dropdown-menu"
+                className="dropdown-menu dropdown-menu-end"
                 onClick={(e) => e.stopPropagation()}
               >
                 {languages.map((lang) => (
@@ -152,6 +171,7 @@ const Navbar = () => {
                         language === lang.code ? "active" : ""
                       }`}
                       onClick={() => changeLanguage(lang.code)}
+                      dir={lang.dir}
                     >
                       {lang.name}
                     </button>
