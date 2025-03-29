@@ -1,8 +1,23 @@
 import { Link } from 'react-router-dom';
+import { toggleWishlist, selectWishlistItems } from '../store/wishlistSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 export default function CardList(movie) {
     movie = movie.movie;
+
+    const wishlistItems = useSelector(selectWishlistItems);
+    const dispatch = useDispatch();
+  
+    // Toggle wishlist
+    const handleToggleWishlist = (movie) => {
+      dispatch(toggleWishlist(movie));
+    };
+  
+    // Check if a movie is in the wishlist
+    const isInWishlist = (movieId) => {
+      return wishlistItems.some((item) => item.id === movieId);
+    };
   return (
     <div key={movie.id} className="col-lg-2 col-md-4 col-sm-6 mb-4">
     <div className="movie-card">
@@ -34,7 +49,13 @@ export default function CardList(movie) {
               'Date not available'
             )}
           </p>
-          <span className="heart-icon">🤍</span>
+          <i
+           className={`bi ${isInWishlist(movie.id) ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+           onClick={(e) => {
+          e.preventDefault();
+          handleToggleWishlist(movie);
+           }}
+          ></i>
         </div>
       </div>
     </div>

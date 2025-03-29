@@ -4,10 +4,24 @@ import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import Loader from '../components/Loader';
 import CardList from '../components/Card';
+import { toggleWishlist, selectWishlistItems } from '../store/wishlistSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const MovieDetail = () => {
   const [movie, setMovie] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
+  const wishlistItems = useSelector(selectWishlistItems);
+  const dispatch = useDispatch();
+
+  // Toggle wishlist
+  const handleToggleWishlist = (movie) => {
+    dispatch(toggleWishlist(movie));
+  };
+
+  // Check if a movie is in the wishlist
+  const isInWishlist = (movieId) => {
+    return wishlistItems.some((item) => item.id === movieId);
+  };
   const [loading, setLoading] = useState({
     movie: true,
     recommendations: true
@@ -88,7 +102,7 @@ const MovieDetail = () => {
 
   return (
     <>
-      <div className="min-vh-30 p-5">
+      <div className="min-vh-30 p-5 mt-5">
         <Container>
           <Card 
             className="border-0 shadow-lg overflow-hidden" 
@@ -99,6 +113,25 @@ const MovieDetail = () => {
               background: 'rgba(255, 255, 255, 0.95)'
             }}
           >
+            <div 
+        className="position-absolute" 
+        style={{
+          top: '15px',
+          right: '15px',
+          zIndex: 1,
+          fontSize: '1.5rem',
+          color: isInWishlist(movie.id) ? 'red' : 'gray'
+        }}
+      >
+        <i
+          className={`bi ${isInWishlist(movie.id) ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+          onClick={(e) => {
+            e.preventDefault();
+            handleToggleWishlist(movie);
+          }}
+        
+        ></i>
+      </div>
             <Row className="g-0">
               {/* Image Column */}
               <Col md={3} className="position-relative">
