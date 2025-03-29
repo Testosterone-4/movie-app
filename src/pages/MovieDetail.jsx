@@ -4,18 +4,26 @@ import { useParams } from "react-router-dom";
 import api from "../services/api";
 import Loader from "../components/Loader";
 import CardList from "../components/Card";
+import Reviews from '../components/Reviews';
 import { toggleWishlist, selectWishlistItems } from "../store/wishlistSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ThemeContext } from "../context/ThemeContext";
 import { useLanguageEffect } from "../hooks/useLanguageEffect";
 
+
 const MovieDetail = () => {
   const [movie, setMovie] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [showReviews, setShowReviews] = useState(false);
   const wishlistItems = useSelector(selectWishlistItems);
   const dispatch = useDispatch();
   const { theme } = useContext(ThemeContext);
   const { id } = useParams();
+
+  const toggleReviews = () => {
+    setShowReviews(!showReviews);
+  };
 
   // Toggle wishlist
   const handleToggleWishlist = (movie) => {
@@ -78,38 +86,55 @@ const MovieDetail = () => {
     fetchRecommendations();
   }, [params.id]);
 
-  if (loading.movie)
-    return (
-      <div className="d-flex justify-content-center align-items-center min-vh-100">
-        <Loader />
-      </div>
-    );
 
-  if (error.movie)
-    return (
-      <div className="d-flex justify-content-center align-items-center min-vh-100">
-        <Alert variant="danger" className="text-center">
-          {error.movie}
-          <div className="mt-2">
-            <button
-              className="btn btn-primary"
-              onClick={() => window.location.reload()}
-            >
-              Try Again
-            </button>
-          </div>
-        </Alert>
-      </div>
-    );
+   // Fetch reviews
+   useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setLoading(prev => ({ ...prev, reviews: true }));
+        const response = await api.get(`/movie/${params.id}/reviews`);
+        setReviews(response.data.results || []);
+      } catch (err) {
+        console.error('Failed to fetch reviews:', err);
+        setError(prev => ({ ...prev, reviews: 'Failed to load reviews' }));
+      } finally {
+        setLoading(prev => ({ ...prev, reviews: false }));
+      }
+    };
 
-  if (!movie)
-    return (
-      <div className="d-flex justify-content-center align-items-center min-vh-100">
-        <Alert variant="warning" className="text-center">
-          No movie data available
-        </Alert>
-      </div>
-    );
+    fetchReviews();
+  }, [params.id]);
+
+  
+  if (loading.movie) return (
+    <div className="d-flex justify-content-center align-items-center min-vh-100">
+      <Loader />
+    </div>
+  );
+  
+  if (error.movie) return (
+    <div className="d-flex justify-content-center align-items-center min-vh-100">
+      <Alert variant="danger" className="text-center">
+        {error.movie}
+        <div className="mt-2">
+          <button 
+            className="btn btn-primary"
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </button>
+        </div>
+      </Alert>
+    </div>
+  );
+  
+  if (!movie) return (
+    <div className="d-flex justify-content-center align-items-center min-vh-100">
+      <Alert variant="warning" className="text-center">
+        No movie data available
+      </Alert>
+    </div>
+  );
 
   return (
     <>
@@ -285,13 +310,25 @@ e Column */}
         </Container>
       </div>
 
-      <hr className={theme === "dark" ? "border-light" : "border-dark"} />
+      <div className="container mb-5 bg-light p-3 rounded-3 shadow-sm">
+  <h1 
+    className="bold" 
+    style={{ marginBottom: '20px', cursor: 'pointer' }}
+    onClick={toggleReviews}
+  >
+    Reviews <span style={{ fontSize: '0.7em' }}>{showReviews ? '▼' : '▶'}</span>
+  </h1>
+  {showReviews && <Reviews reviews={reviews} />}
+</div>
+         
+      
+       <hr className={theme === "dark" ? "border-light" : "border-dark"} />
 
       <div className={`container mb-5 ${theme === "dark" ? "text-light" : ""}`}>
         <h1 className="bold" style={{ marginBottom: "20px" }}>
           Recommendations
         </h1>
-
+        
         {loading.recommendations ? (
           <div className="d-flex justify-content-center py-5">
             <Loader />
