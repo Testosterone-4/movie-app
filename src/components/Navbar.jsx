@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectWishlistCount } from "../store/wishlistSlice";
 import { Link } from "react-router-dom";
-import { Sun, Moon, Globe } from "react-bootstrap-icons";
+import { Heart, HeartFill, Sun, Moon, Globe } from "react-bootstrap-icons";
 import { ThemeContext } from "../context/ThemeContext";
 import api from "../services/api"; // Add this import
 
@@ -128,17 +128,23 @@ const Navbar = () => {
           </ul>
 
           <div className="d-flex align-items-center">
-            {/* Watchlist Link with counter */}
+            {/* Updated Wishlist Link with better icon */}
             <Link
               to="/wishlist"
-              className={`nav-link me-3 ${
+              className={`nav-link me-3 d-flex align-items-center ${
                 theme === "light" ? "text-dark" : "text-white"
               }`}
             >
-              <span className="heart-icon">🤍</span>
-              <span className="ms-1">
-                Watchlist {wishlistCount > 0 && `(${wishlistCount})`}
-              </span>
+              <div className="position-relative">
+                <Heart className="fs-5" />
+                {wishlistCount > 0 && (
+                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {wishlistCount}
+                    <span className="visually-hidden">items in wishlist</span>
+                  </span>
+                )}
+              </div>
+              <span className="ms-2">Watchlist</span>
             </Link>
 
             {/* Updated Language Dropdown */}

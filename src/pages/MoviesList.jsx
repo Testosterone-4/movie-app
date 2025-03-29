@@ -13,12 +13,13 @@ function MoviesList() {
   const dispatch = useDispatch();
   const movies = useSelector((state) => state.movies.list);
   const wishlistItems = useSelector(selectWishlistItems);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchActive, setIsSearchActive] = useState(false);
   const { searchResults, searchLoading, handleSearch } = useMovieSearch();
   const { theme } = useContext(ThemeContext);
   const { language } = useLanguage();
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
+  // Debounce function for search
   const debounce = (func, delay) => {
     let timer;
     return function (...args) {
@@ -27,6 +28,7 @@ function MoviesList() {
     };
   };
 
+  // Fetch movies if not searching
   useEffect(() => {
     if (!isSearchActive) {
       api
@@ -37,12 +39,14 @@ function MoviesList() {
     }
   }, [page, isSearchActive, dispatch, language]);
 
+  // Update movies when search results change
   useEffect(() => {
     if (isSearchActive && searchResults) {
       dispatch(setMovies(searchResults));
     }
   }, [searchResults, isSearchActive, dispatch]);
 
+  // Debounced search handler
   const handleDynamicSearch = useCallback(
     debounce((query) => {
       if (query.trim()) {
@@ -77,6 +81,7 @@ function MoviesList() {
   };
 
   const isInWishlist = (movieId) => {
+    return wishlistItems.some((item) => item.id === movieId);
     return wishlistItems.some((item) => item.id === movieId);
   };
 
@@ -240,7 +245,6 @@ function MoviesList() {
             </li>
           </ul>
         </nav>
-        {/* ... */}
       </div>
     </div>
   );

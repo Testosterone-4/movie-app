@@ -9,6 +9,7 @@ const Wishlist = () => {
 
   return (
     <div className="container mt-5">
+      <div className="main-content">
       <h1 className="mb-4">Watchlist</h1>
       
       {wishlistItems.length === 0 ? (
@@ -63,6 +64,7 @@ const Wishlist = () => {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 };
