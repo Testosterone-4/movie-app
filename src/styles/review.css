@@ -156,3 +156,36 @@
   .no-reviews-message {
     font-size: 0.95rem;
   }
+
+  /* Dark mode styles */
+.dark-mode {
+  
+  color: #f0f0f0;
+}
+
+.review-card.dark-mode {
+  background-color: #2d2d2d;
+  border-color: #444;
+}
+
+.author-name.dark-mode,
+.review-paragraph.dark-mode,
+.rating-value.dark-mode,
+.no-reviews-title.dark-mode,
+.no-reviews-message.dark-mode {
+  color: #f0f0f0;
+}
+
+.read-more-btn.dark-mode {
+  background-color: #444;
+  color: #f0f0f0;
+}
+
+.full-review-link.dark-mode {
+  color: #4da6ff;
+}
+
+.avatar-placeholder.dark-mode {
+  background-color: #444;
+  color: #f0f0f0;
+}
